@@ -1,0 +1,12 @@
+{
+  "name": "cognito-pre-signup-standalone",
+  "version": "0.0.0",
+  "main": "index.js",
+  "scripts": {
+    "package": "zip -r function.zip index.js package.json node_modules"
+  },
+
+  "dependencies": {
+    "aws-sdk": "^2.224.1"
+  }
+}

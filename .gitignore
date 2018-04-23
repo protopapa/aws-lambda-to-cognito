@@ -1,0 +1,49 @@
+# package directories
+node_modules
+jspm_packages
+
+# terraform
+terraform-module-cognito/
+
+# Serverless directories
+.serverless
+
+# profiles
+.classpath
+.gradle/
+.project
+.settings/
+.terraform/
+.vscode/
+terraform.tfstate.d/
+plan.out
+
+# java
+*.class
+/build/
+/bin/
+
+# Package Files
+*.war
+*.ear
+*.zip
+
+.idea
+*.ipr
+
+# node.js
+#
+node_modules/
+dist/
+npm-debug.log
+yarn-error.log
+
+# VS Code
+.vscode/*
+!.vscode/*.json
+
+# lerna
+lerna-debug.log
+
+# macOS
+.DS_Store
