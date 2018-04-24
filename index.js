@@ -23,7 +23,17 @@ let response_error = {
 };
 
 exports.handler = function(event, context, callback){
-    userRequest.Username = event.email;
+
+    let responseCode = 200;
+    console.log(event);
+    if (event.body !== null && event.body !== undefined) {
+        let body = JSON.parse(event.body);
+        if (body.email)
+            userRequest.Username = body.email;
+    }
+
+    console.log('userRequest variable after set username');
+    console.log(userRequest);
 
     cognitoIdentityService.adminGetUser(userRequest, function(getUserError, getUserData){
         if(!getUserError){
@@ -41,12 +51,25 @@ exports.handler = function(event, context, callback){
                 });
             } else {
                 console.log('User is already confirmed');
-                response_error.body.message = JSON.stringify('Operation not Allowed');
                 console.log(response_error);
             }
         } else{
           console.log(JSON.stringify(getUserError));
         }
-        callback(JSON.stringify(response_error), JSON.stringify(response_success));
+
+
+        var responseBody = {
+            message: 'Hello from response',
+            input: event
+        };
+        var response = {
+            statusCode: responseCode,
+            headers: {
+                "x-custom-header" : "my custom header value"
+            },
+            body: JSON.stringify(responseBody)
+        };
+        console.log("response: " + JSON.stringify(response));
+        callback(null, response);
     });
 };
