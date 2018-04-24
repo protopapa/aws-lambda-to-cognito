@@ -5,7 +5,21 @@ const userPoolId = process.env.userPoolId;
 
 const userRequest = {
     UserPoolId: userPoolId,
-    Username: '',
+    Username: ''
+};
+
+const response_success = {
+    statusCode: 200,
+    body: JSON.stringify({
+        message: 'ok'
+    })
+};
+
+let response_error = {
+    statusCode: 400,
+    body: {
+        message: 'error'
+    }
 };
 
 exports.handler = function(event, context, callback){
@@ -13,19 +27,26 @@ exports.handler = function(event, context, callback){
 
     cognitoIdentityService.adminGetUser(userRequest, function(getUserError, getUserData){
         if(!getUserError){
-            if(getUserData['UserStatus'] === 'UNCONFIRMED'){
+            console.log(getUserData);
+            if (getUserData['UserStatus'] === 'UNCONFIRMED') {
                 cognitoIdentityService.adminDeleteUser(userRequest, function (deleteError, deleteData) {
-                    if(!deleteError){
+                    if (!deleteError) {
                         console.log("Deleted user with username: ");
-                        console.log(userRequest.Username)
-                    }else {
-                        console.log(JSON.stringify(getUserError));
+                        console.log(userRequest.Username);
+                        response_error = null;
+                    } else {
+                        console.log(JSON.stringify(deleteError));
+                        response_error.body.message = JSON.stringify(deleteError);
                     }
                 });
+            } else {
+                console.log('User is already confirmed');
+                response_error.body.message = JSON.stringify('Operation not Allowed');
+                console.log(response_error);
             }
         } else{
           console.log(JSON.stringify(getUserError));
         }
-        callback(null, 'Done'); // TODO define this part.
+        callback(JSON.stringify(response_error), JSON.stringify(response_success));
     });
 };
