@@ -1,12 +1,16 @@
 {
-  "name": "cognito-pre-signup-standalone",
-  "version": "0.0.0",
-  "main": "index.js",
+  "name": "lambda-to-clean-cognito",
+  "version": "0.0.1",
   "scripts": {
-    "package": "zip -r function.zip index.js package.json node_modules"
+    "build": "rimraf dist && cross-env NODE_ENV=production webpack",
+    "package": "zip -j dist.zip dist/*"
   },
-
   "dependencies": {
-    "aws-sdk": "^2.224.1"
+    "aws-sdk": "^2.228.1"
+  },
+  "devDependencies": {
+    "cross-env": "^5.1.3",
+    "rimraf": "^2.6.2",
+    "webpack": "^3.10.0"
   }
 }
