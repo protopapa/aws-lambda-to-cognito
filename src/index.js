@@ -16,6 +16,7 @@ const response = {
 };
 
 exports.handler = function(event, context, callback) {
+
     if (event.body !== null && event.body !== undefined) {
         let body = JSON.parse(event.body);
         if (body.userPoolId) userRequest.UserPoolId = body.userPoolId;
@@ -25,10 +26,12 @@ exports.handler = function(event, context, callback) {
     console.log("userRequest: " + JSON.stringify(userRequest));
 
     cognitoIdentityService.adminGetUser(userRequest, function(getUserError, getUserData) {
+
         if (!getUserError) {
             if (isDebug) {
                 console.log('getUserData: ' + JSON.stringify(getUserData));
             }
+
             if (getUserData['UserStatus'] === 'UNCONFIRMED') {
                 cognitoIdentityService.adminDeleteUser(userRequest, function(deleteError, deleteData) {
                     if (!deleteError) {
