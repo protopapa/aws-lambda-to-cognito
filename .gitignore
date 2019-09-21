@@ -2,9 +2,6 @@
 node_modules
 jspm_packages
 
-# terraform
-terraform-module-cognito/
-
 # Serverless directories
 .serverless
 
@@ -13,10 +10,6 @@ terraform-module-cognito/
 .gradle/
 .project
 .settings/
-.terraform/
-.vscode/
-terraform.tfstate.d/
-plan.out
 
 # java
 *.class
@@ -30,9 +23,9 @@ plan.out
 
 .idea
 *.ipr
+*.iml
 
 # node.js
-#
 node_modules/
 dist/
 npm-debug.log
@@ -44,6 +37,3 @@ yarn-error.log
 
 # lerna
 lerna-debug.log
-
-# macOS
-.DS_Store
