@@ -1,10 +1,11 @@
 const aws = require('aws-sdk');
+const cognito = new aws.CognitoIdentityServiceProvider({apiVersion: 'latest', region: 'us-east-2'});
 
-const cognito = new aws.CognitoIdentityServiceProvider({apiVersion: 'latest', region: 'eu-west-1'});
 const userRequest = {
-    UserPoolId: '',
+    UserPoolId: 'STRING-POOL-ID',
     Username: '',
 };
+
 const response = {
     statusCode: 200,
     body: JSON.stringify({
@@ -12,22 +13,23 @@ const response = {
     }),
 };
 
+
 function adminDeleteUser(user) {
-    if (user && user['UserStatus'] === 'UNCONFIRMED') {
-        userRequest.Username = user.email;
+    if (user && user['UserStatus'] === 'FORCE_CHANGE_PASSWORD') {
+        userRequest.Username = user.Username;
         return cognito.adminDeleteUser(userRequest)
-            .promise().catch(err => "Error on delete: " + JSON.stringify(err));
+            .promise();
     }
 }
 
 exports.handler = async function (event, context) {
-    let body = JSON.parse(event.body);
-    if (body.userPoolId) userRequest.UserPoolId = body.userPoolId;
-    if (body.email) userRequest.Username = body.email;
+    if (event.email) userRequest.Username = event.email;
 
-    const user = await cognito.adminGetUser(userRequest).promise()
-        .catch(err => console.log("Error on: " + JSON.stringify(err)));
-    await adminDeleteUser(user);
-
+    try {
+        const user = await cognito.adminGetUser(userRequest).promise();
+        await adminDeleteUser(user);
+    } catch (err) {
+        console.log('Error: ' + JSON.stringify(err));
+    }
     return response;
 };

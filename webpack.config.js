@@ -2,6 +2,7 @@ const path = require('path');
 
 module.exports = {
   target: 'node',
+  mode: 'production',
   entry: path.resolve(__dirname, 'src'),
   resolve: {
     extensions: ['.js'],
