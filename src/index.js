@@ -24,12 +24,14 @@ function adminDeleteUser(user) {
 
 exports.handler = async function (event, context) {
     if (event.email) userRequest.Username = event.email;
+     cognito.adminGetUser(userRequest).promise()
+         .then(
+             userRequest.Username=Response.
+             cognito.adminDeleteUser(userRequest)
+                 .promise()
+                 .then(console.log('User deleted'))
+                 .catch("Error on deletion"))
+         .catch(console.log("Could not find this user"));
 
-    try {
-        const user = await cognito.adminGetUser(userRequest).promise();
-        await adminDeleteUser(user);
-    } catch (err) {
-        console.log('Error: ' + JSON.stringify(err));
-    }
     return response;
 };
