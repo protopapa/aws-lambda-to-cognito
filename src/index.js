@@ -22,7 +22,7 @@ exports.handler = function (event, context, callbak) {
                 return cognito.adminDeleteUser(userRequest).promise();
             } else {
                 return new Promise(function (resolve, reject) {
-                    resolve("User does not fullfill requirements for deletion ");
+                    reject("User does not fulfill requirements for deletion ");
                 })
             }
         })
@@ -35,5 +35,6 @@ exports.handler = function (event, context, callbak) {
 
     return callbak(null, response);
 };
+
 
 
