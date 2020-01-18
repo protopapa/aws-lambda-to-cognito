@@ -13,25 +13,27 @@ const response = {
     }),
 };
 
-
-function adminDeleteUser(user) {
-    if (user && user['UserStatus'] === 'FORCE_CHANGE_PASSWORD') {
-        userRequest.Username = user.Username;
-        return cognito.adminDeleteUser(userRequest)
-            .promise();
-    }
-}
-
-exports.handler = async function (event, context) {
+exports.handler = function (event, context, callbak) {
     if (event.email) userRequest.Username = event.email;
-     cognito.adminGetUser(userRequest).promise()
-         .then(
-             userRequest.Username=Response.
-             cognito.adminDeleteUser(userRequest)
-                 .promise()
-                 .then(console.log('User deleted'))
-                 .catch("Error on deletion"))
-         .catch(console.log("Could not find this user"));
 
-    return response;
+    cognito.adminGetUser(userRequest).promise()
+        .then(function (adminGetUserResponse) {
+            if (adminGetUserResponse && adminGetUserResponse['UserStatus'] === 'FORCE_CHANGE_PASSWORD') {
+                return cognito.adminDeleteUser(userRequest).promise();
+            } else {
+                return new Promise(function (resolve, reject) {
+                    resolve("User does not fullfill requirements for deletion ");
+                })
+            }
+        })
+        .then(function (response) {
+            console.log("User deleted: ", JSON.stringify(response));
+        })
+        .catch(function (errorValue) {
+            console.log("Error :", JSON.stringify(errorValue))
+        });
+
+    return callbak(null, response);
 };
+
+
