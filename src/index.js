@@ -16,9 +16,11 @@ const response = {
 
 function adminDeleteUser(user) {
     if (user && user['UserStatus'] === 'FORCE_CHANGE_PASSWORD') {
-        userRequest.Username = user.Username;
-        return cognito.adminDeleteUser(userRequest)
-            .promise();
+        return cognito.adminDeleteUser(userRequest).promise();
+    } else {
+        return new Promise(function (resolve, reject) {
+            reject("User does not fulfill requirements for deletion ");
+        })
     }
 }
 
